@@ -1,0 +1,322 @@
+@import url("//at.alicdn.com/t/font_6wprj3lywdohia4i.css");
+
+.page-dashboard .ul-app{
+    list-style-type:none;
+    padding-left: 0px;
+}
+
+.page-dashboard .ul-app > li {
+    width: 20%;
+    text-align: center;
+    float: left;
+}
+
+
+.page-dashboard #btn-app-add {
+    text-align: center;
+    padding-top: 60px;
+}
+
+.page-dashboard #btn-app-add > div:hover {
+    border: 1px solid #d9d9d9;
+    box-shadow: 0px 0px 10px #dddddd;
+}
+
+.page-dashboard #btn-app-add > div {
+    background-color: white;
+    width: 200px;
+    height: 220px;
+    border-radius: 5px;
+    border: 2px dashed gray;
+    cursor: pointer;
+    text-align: center;
+    margin: auto;
+}
+
+.page-dashboard #btn-app-add p {
+    color: gray;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.page-dashboard #btn-app-add img {
+    width: 53px;
+    height: 53px;
+    border: none;
+    display: block;
+    margin: auto;
+    margin-top: 60px;
+}
+
+@media (max-width: 1200px) {
+    .page-dashboard .ul-app > li {
+        width: 25%;
+    }
+}
+@media (max-width: 990px) {
+    .page-dashboard .ul-app > li {
+        width: 33%;
+    }
+}
+@media (max-width: 670px) {
+    .page-dashboard .ul-app > li {
+        width: 50%;
+    }
+}
+@media (max-width: 460px) {
+    .page-dashboard .ul-app > li {
+        width: 100%;
+    }
+}
+
+.page-dashboard .box-app {
+    text-align: left;
+    margin: auto;
+    margin-bottom: 20px;
+    background-color: white;
+    width: 200px;
+    height: 260px;
+    border-radius: 5px;
+    border: 1px solid #d9d9d9;
+    position: relative;
+}
+
+.page-dashboard .box-app:hover {
+    box-shadow: 0px 0px 10px #dddddd;
+}
+/** new flag  **/
+.page-dashboard .box-app .app-flag-new {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    z-index: 2;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #e83f3f;
+    color: #ffffff;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+    padding-left: 0px;
+    padding-top: 1px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.page-dashboard .box-app-header {
+    width: 100%;
+    height: 80px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: #ddeefb;
+}
+.page-dashboard .box-app-api .box-app-header{
+    background-color: #d7f8f8;
+}
+
+.page-dashboard .box-app-tensor .box-app-header{
+    background-color: #fff5e7;
+}
+
+/** setting group  **/
+.page-dashboard .box-app-header .group-setting{
+    position: absolute;
+    right: 5px;
+    top: 0;
+    cursor: pointer;
+}
+.page-dashboard .box-app-header .group-setting > a {
+    color: #cccccc;
+    font-size: 16px;
+}
+.page-dashboard .box-app-header .group-setting > a:hover {
+    color: #b2b2b2;
+}
+.page-dashboard .box-app-header .group-setting > a:active {
+    color: #999999;
+}
+/** app info  **/
+.page-dashboard .box-app-header .app-info {
+    font-size: 17px;
+    padding: 10px;
+    padding-top: 18px;
+    color: white;
+    height: 80px;
+    display: block;
+    font-weight: 600;
+    text-align: justify;
+}
+/** app title  **/
+.page-dashboard .box-app-header a.app-title,
+.page-dashboard .box-app-header a.app-title:hover {
+    font-size: 16px;
+    color: #3f9fe8;
+    font-weight: 400;
+}
+
+.page-dashboard .box-app-tensor a.app-title,
+.page-dashboard .box-app-tensor a.app-title:hover {
+    color: #f0b461;
+}
+
+.page-dashboard .box-app-api a.app-title,
+.page-dashboard .box-app-api a.app-title:hover {
+    color: #2dcaca;
+}
+
+/** app copy button  **/
+.page-dashboard .box-app .btn-copy {
+    font-size: 16px;
+    color: #dddddd
+}
+
+.page-dashboard .box-app .btn-copy:hover {
+    color: #fff;
+}
+
+/** app type icon  **/
+.page-dashboard .box-app-header .icon-product-type{
+    position: absolute;
+    right: 7px;
+    top: 53px;
+}
+.page-dashboard .box-app-header .icon-product-type img{
+    width: 16px;
+}
+
+
+
+
+.page-dashboard .box-app-body {
+    height: 80px;
+}
+
+.page-dashboard .box-app-body > p {
+    margin: 9px;
+    margin-left: 15px;
+    color: #999999;
+}
+
+
+.page-dashboard .box-app-footer ul {
+    list-style: none;
+    padding-left: 20px;
+    padding-right: 10px;
+    display: flex;
+}
+
+.page-dashboard .box-app-footer li {
+    /*width: 80px;*/
+    display: inline-block;
+}
+.page-dashboard .box-app-footer .btn{
+    min-width: 70px;
+    height: 30px;
+    font-size: 12px;
+    padding: 7px;
+}
+
+.page-dashboard .box-app-footer .btn-gray{
+    margin-left: 15px;
+}
+
+.page-dashboard .box-app-footer .btn-primary-light,
+.page-dashboard .box-app-footer .btn-danger-light{
+    margin-left: 15px;
+}
+
+.page-dashboard .box-app-tensor .btn-primary-light{
+    color: #ffab47;
+    border-color: #ffab47;
+}
+.page-dashboard .box-app-api .btn-primary-light{
+    color: #22c7c7;
+    border-color: #22c7c7;
+}
+.page-dashboard .box-app-source .btn-primary-light{
+    color: #0078d7;
+    border-color: #0078d7;
+}
+.page-dashboard .box-app-tensor .btn-primary-light:hover{
+    color: #ed943b;
+    border-color: #ed943b;
+}
+.page-dashboard .box-app-tensor .btn-primary-light:active,
+.page-dashboard .box-app-tensor .btn-primary-light:focus{
+    background-color: #ffecdd;
+}
+.page-dashboard .box-app-api .btn-primary-light:hover{
+    color: #15b7b3;
+    border-color: #15b7b3;
+}
+.page-dashboard .box-app-source .btn-primary-light:hover{
+    color: #2b579a;
+    border-color: #2b579a;
+}
+
+.page-dashboard .box-app-tensor .text-primary{
+    color: #ffab47 !important;
+}
+
+.page-dashboard .box-app-api .text-primary{
+    color: #22c7c7 !important;
+}
+
+.page-dashboard .box-app-tensor .btn-primary{
+    background-color: #ffab47;
+}
+.page-dashboard .box-app-api .btn-primary{
+    background-color: #22c7c7;
+}
+.page-dashboard .box-app-source .btn-primary{
+    background-color: #0078d7;
+}
+.page-dashboard .box-app-tensor .btn-primary:hover{
+    background-color: #ed943b;
+}
+.page-dashboard .box-app-api .btn-primary:hover{
+    background-color: #15b7b3;
+}
+.page-dashboard .box-app-source .btn-primary:hover{
+    background-color: #2b579a;
+}
+
+.page-dashboard .box-app .text-link{
+    cursor: pointer;
+}
+.page-dashboard .box-app-api .text-link{
+    color: #22c7c7;
+}
+.page-dashboard .box-app-api .text-link:hover{
+    color: #09ccbe;
+}
+.page-dashboard .box-app-api .text-link:active{
+    color: #15b7b3;
+}
+.page-dashboard .box-app-tensor .text-link{
+    color: #ffab47;
+}
+.page-dashboard .box-app-tensor .text-link:hover{
+    color: #ff8323;
+}
+.page-dashboard .box-app-tensor .text-link:active{
+    color: #ff7104;
+}
+.page-dashboard .box-app-source{
+    border-color: #d5ebff;
+    background-color: #f9f9f9;
+    padding: 22px 20px 20px 18px;
+}
+.page-dashboard .box-app-source .box-app-title i{
+    font-size: 26px;
+    position: relative;
+    bottom: 8px;
+}
+.page-dashboard .box-app-source .box-app-body{
+    color: #666666;
+    line-height: 2em;
+    margin-top: 20px;
+    font-size: 12px;
+    height: 105px;
+    letter-spacing: 1px;
+}

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% load staticfiles %}
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="{%static 'assets/img/crawler.png'%}">
+	<title>云爬虫平台-爬虫管理</title>
+    <!-- Bootstrap core CSS     -->
+    
+    <link href="{%static 'assets/css/bootstrap.min.css'%}" rel="stylesheet" />
+    <!-- Animation library for notifications   -->
+    <link href="{%static 'assets/css/animate.min.css'%}" rel="stylesheet"/>
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="{%static 'assets/css/light-bootstrap-dashboard.css'%}" rel="stylesheet"/>
+    <link href="{%static 'assets/css/pe-icon-7-stroke.css'%}" rel="stylesheet" />
+    <link href="{%static 'assets/css/build.css'%}" rel="stylesheet" />
+    <script src="{%static 'js/jquery-3.1.1.min.js'%}"></script>
+    <script src="{%static 'js/echarts.js'%}"></script>
+	<script src="{%static 'js/theme/vintage.js'%}"></script>
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="{%static 'assets/img/sidebar-5.jpg'%}">
+
+    <!--
+
+        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+        Tip 2: you can also add an image using data-image tag
+
+    -->
+
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                    爬虫管理
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="active">
+                    <a id="console" href="javascript:void(0);">
+                        <i class="pe-7s-monitor"></i>
+                        <p>控制台信息</p>
+                    </a>
+                    <a id="watch" href="javascript:void(0);">
+                        <i class="pe-7s-news-paper"></i>
+                        <p>结果预览</p>
+                    </a>
+                    <a href="{% url 'downloadFile' %}?crawler={{crawler.crawler_name}}">
+                        <i class="pe-7s-download"></i>
+                        <p>数据下载</p>
+                    </a>
+                    <a id="dbShow" href="javascript:void(0);">
+                        <i class="pe-7s-airplay"></i>
+                        <p>数据发布</p>
+                    </a>
+                    <a id="analysis" href="javascript:void(0);">
+                        <i class="pe-7s-graph"></i>
+                        <p>数据统计</p>
+                    </a>
+                    <a href="{% url 'codeEdit' %}?crawler={{crawler.crawler_id}}">
+                        <i class="pe-7s-config"></i>
+                        <p>代码修改</p>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse">
+                        <span class="sr-only"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">爬虫名称：{{crawler.crawler_name}}</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                            </a>
+                        </li>
+                    </ul>
+                   
+                    <ul class="nav navbar-nav navbar-right">
+                        
+                        <li>
+                           <a href="{% url 'overview' %}">
+                               {{userinfo.username}}
+                            </a>
+                        </li>
+                        <li>
+                           <a href="{% url 'logout' %}">
+                               注销
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row" id="show1">
+                 <div class="col-md-12">
+                     <div class="card">
+                     	<!-- 控制台信息 -->
+						<div id="consoleShow" style="padding: 15px 15px 10px 15px;display:none;">
+                            <div id="content">
+                            	
+                            </div>
+                            <ul id="page" class="pagination pagination-sm">
+                            	
+                            </ul><br />
+                        </div>
+						<!-- 结果预览 -->
+                        <div id="resultShow" style="padding: 15px 15px 10px 15px;display:none;">
+                            
+                        </div>
+						<!-- 数据分析 -->
+                        <div id="dataAnalysis" style="padding: 15px 15px 10px 15px;display:none;">		
+                        	<p class="text-muted" font-size="20px">请选择需要统计的条目:</p>
+                        	
+                            <div id="analysisPost">
+            
+                            </div>
+                            <button id='analysisSubmit' class="btn btn-info btn-fill btn-sm" type='button'/>提交</button>
+                        </div>
+                        <!-- 图标选择 -->
+                        <div id="charts" style="padding: 15px 15px 10px 15px;display:none;">
+                        	<p class="text-muted" font-size="20px">请选择统计图样式:</p>
+                        	<button type="button" id="Histogram" class="btn btn-info btn-fill btn-sm"> 柱状图</button>
+							<button type="button" id="pieChart" class="btn btn-info btn-fill btn-sm"> 饼图</button>
+                        </div>
+						
+                        
+                     </div>
+                 </div>
+                 <div class="col-md-12" id="chartsShow" style="display:none">
+                     <div class="card" id="main" style="height:800px;padding: 15px 15px 10px 15px;">
+                 
+                     </div>
+                </div>
+            </div>
+            <div class="row" id="dataRelease">
+					<div class="col-md-4" >
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">导出到数据库</h4>
+                            </div>
+                            <div class="content">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>数据库地址</label>
+                                                <input id="ip" type="text" class="form-control" placeholder="数据库地址">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>端口号</label>
+                                                <input id="port" type="text" class="form-control" placeholder="端口号">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>用户名</label>
+                                                <input id="sqluser" type="text" class="form-control" placeholder="用户名">
+                                                
+												
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>密码</label>
+                                                <input id="sqlpassword" type="password" class="form-control" placeholder="密码">
+                                                <input style="display:none" type="password"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>数据库名</label>
+                                                <input id="dbname" type="text" class="form-control" placeholder="数据库名">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>表名</label>
+                                                <input id="tablename" type="text" class="form-control" placeholder="表名">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
+										
+                                    <button type="button" id="dbsubmit" class="btn btn-info btn-fill pull-lift">更新到数据库</button>
+                                    <a class="btn btn-success btn-fill pull-right" href="{% url 'sqlcreate' %}?crawler={{crawler.crawler_name}}">sql语句下载</a>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        
+                        	<div>
+                        		<form role="form">
+									<div class="form-group">
+										<label for="name">导入结果：</label>
+
+										<textarea id="showMessage" class="form-control text-lift" rows="17" spellcheck="false"></textarea>
+									</div>
+								</form>
+                        	</div>
+                        
+                    </div>
+				</div>
+        </div>
+
+
+        
+
+    </div>
+</div>
+<script type="text/javascript">
+	var tag="";
+	function dataformat(ns) {  
+    var d = new Date(ns);  
+    var dformat = [ d.getFullYear(), d.getMonth() + 1, d.getDate() ].join('-')   
+            + ' ' + [ d.getHours(), d.getMinutes(), d.getSeconds() ].join(':');  
+    return dformat;  
+	}
+	function myhidden(){
+			$("#show1").show();
+			$("#dataRelease").hide();
+			$("#chartsShow").hide();
+			$("#charts").hide();
+	        if (tag == "resultShow") {
+	            $("#resultShow").hide();
+	        } else if (tag == "dataAnalysis") {
+	            $("#dataAnalysis").hide();
+	        } else if (tag == "consoleShow") {
+	        	$("#consoleShow").hide();
+	        } 
+	    }
+    //控制台信息
+    $("#console").click(function(){
+		myhidden();
+        $.post("{% url 'showConsole' %}",{crawler:"{{crawler.crawler_id}}"},function(result){
+        $("#consoleShow").show();
+        tag="consoleShow";
+		
+			page = result.split('@@',2)[0];
+			$("#page").append("<li><a href='javascript:void(0);'>&laquo;</a></li>");
+			for(var i=1;i<=page;i++){
+				$("#page").append("<li><a page="+i+" href='javascript:void(0);'>"+i+"</a></li>");
+			}
+			$("#page").append("<li><a href='javascript:void(0);'>&raquo;</a></li>");
+			$("#content").html(result.split('@@',2)[1]);
+		});
+    });
+    $(document).ready(function(){
+	    $("#page").on("click","li",function(){
+	    	var pageActive = $(this).find('a').attr("page");
+	    	$.post("{% url 'showConsole' %}",{crawler:"{{crawler.crawler_id}}",page:pageActive},function(result){
+					$("#content").html(result);
+			
+			});
+	    });
+	    $('#console').trigger("click");
+	});
+    //数据预览
+    $("#watch").click(function(){
+        myhidden();
+        $("#resultShow").show();
+        tag="resultShow";
+        $.post("{% url 'spiderResult' %}",{crawler:"{{crawler.crawler_name}}"},function(result){
+            json = eval(result);
+            for(var i=0,l=json.length;i<l;i++){
+                for(var key in json[i]){
+                    $("#resultShow").append("<div>"+key+':'+json[i][key]+"</div>");  
+                }
+                $("#resultShow").append("<hr/>")
+            }
+        });
+    });
+    
+    $("#analysis").click(function(){
+        $.post("{% url 'spiderResult' %}",{crawler:"{{crawler.crawler_name}}"},function(result){
+            json1 = eval(result);
+            myhidden();
+            $("#analysisPost").html("");
+            $("#charts").hide();
+            $("#chartsShow").hide();
+            $("#dataAnalysis").show();
+            tag="dataAnalysis";
+            
+            $("#analysisPost").append()
+            for(var key in json1[0]){
+                $("#analysisPost").append("<div class='radio radio-info radio-inline'><input name='item' type='radio' value="+key+" />"+"<label for='inlineRadio1'>"+key+"</label></div>");
+            }
+            $("#analysisPost").append("<br/>"); 
+        
+         });
+    });
+    
+    $("#analysisSubmit").click(function(){
+        
+        var checked = $("input[name='item']:checked").val()
+        $.post("{% url 'showCharts' %}",{crawler:"{{crawler.crawler_name}}",checked:checked},function(result){
+        	count = "样本总数:"+result.split('@@',2)[0];
+        	console.log(count);
+            data = eval(result.split('@@',2)[1]);
+            $("#dataAnalysis").slideUp("fast");
+            $("#charts").slideDown("fast");
+        });     
+    });
+
+    $("#Histogram").click(function(){
+    	$("#chartsShow").show();
+		var myChart = echarts.init(document.getElementById('main'),'vintage');
+			datax = new Array()
+			datay = new Array()
+			for(var i=0,l=data.length;i<l;i++){
+				for(var key in data[i]){
+					datax.push(key)
+					datay.push(data[i][key])
+					
+				}
+			}
+	        // 指定图表的配置项和数据
+	        var zhuOption = {
+	            title : {
+		       		text: '数据统计',
+		        	subtext: count
+		        	
+		   		},
+
+	            tooltip: {},
+	            legend: {
+	                data:['数量']
+	            },
+	            xAxis: {
+	                data: datax
+	            },
+	            yAxis: {},
+	            series: [{
+	                name: '数量',
+	                type: 'bar',
+	                data: datay
+	            }]
+	        };
+	        myChart.setOption(zhuOption);
+	});
+	$("#pieChart").click(function(){
+		$("#chartsShow").show();
+		var myChart = echarts.init(document.getElementById('main'),'vintage');
+		var piedata = [];
+		var legenddata = [];
+
+		for(var i=0,l=data.length;i<l;i++){
+				for(var key in data[i]){
+					var map ={};
+					legenddata.push(key)					
+					map.name = key;
+					map.value = data[i][key];
+					piedata.push(map)
+				}
+			}
+		console.log(legenddata)
+		console.log(piedata)
+
+		pieoption = {
+		    title : {
+		        text: '数据统计',
+		        subtext: count,
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        orient : 'vertical',
+		        x : 'left',
+		        data:legenddata
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {
+		                show: true, 
+		                type: ['pie', 'funnel'],
+		                option: {
+		                    funnel: {
+		                        x: '25%',
+		                        width: '50%',
+		                        funnelAlign: 'left',
+		                        max: 1548
+		                    }
+		                }
+		            },
+		            restore : {show: true},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    series : [
+		        {
+		            name:'数量',
+		            type:'pie',
+		            radius : '55%',
+		            center: ['50%', '60%'],
+		            data:piedata
+		        }
+		    ]
+		};
+		myChart.setOption(pieoption);
+	});
+	//数据发布
+	$("#dbShow").click(function(){
+		$("#show1").hide();
+		$("#dataRelease").show();
+	});
+	$("#dbsubmit").click(function(){
+
+		var ip = $("#ip").val();
+		var port = $("#port").val();
+		var sqluser = $("#sqluser").val();
+		var sqlpassword = $("#sqlpassword").val();
+		var dbname = $("#dbname").val();
+        var tablename = $("#tablename").val();
+        $("#showMessage").append("正在更新，请稍后"+"\n");
+		$.post("{% url 'sqlImport' %}",{crawler:"{{crawler.crawler_name}}",ip:ip,port:port,sqluser:sqluser,sqlpassword:sqlpassword,dbname:dbname,tablename:tablename},function(result){
+
+			var dataNow = new Date().getTime()
+			$("#showMessage").append("["+dataformat(dataNow)+"] "+result+"\n");
+			var scrollTop = $("#showMessage")[0].scrollHeight;
+		});	
+	});
+	
+	// $("#sqldown").click(function(){
+	// 	window.open("{% url 'sqlcreate' %}?crawler={{crawler.crawler_name}}");
+	// });
+
+
+</script>
+
+</body>
+
+    <!--   Core JS Files   -->
+	<script src="{%static 'assets/js/bootstrap.min.js'%}" type="text/javascript"></script>
+
+	<!--  Checkbox, Radio & Switch Plugins -->
+	<script src="{%static 'assets/js/bootstrap-checkbox-radio-switch.js'%}"></script>
+
+    
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script src="{%static 'assets/js/light-bootstrap-dashboard.js'%}"></script>
+
+
+
+</html>

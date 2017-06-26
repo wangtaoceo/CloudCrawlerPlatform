@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% load staticfiles %}
+{% load myfilter %}
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="{%static 'assets/img/crawler.png'%}">
+	<title>云爬虫平台-爬虫管理</title>
+    <!-- Bootstrap core CSS     -->
+    
+    <link href="{%static 'assets/css/bootstrap.min.css'%}" rel="stylesheet" />
+    <!-- Animation library for notifications   -->
+    <link href="{%static 'assets/css/animate.min.css'%}" rel="stylesheet"/>
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="{%static 'assets/css/light-bootstrap-dashboard.css'%}" rel="stylesheet"/>
+    <link href="{%static 'assets/css/pe-icon-7-stroke.css'%}" rel="stylesheet" />
+    <script src="{%static 'js/jquery-3.1.1.min.js'%}"></script>
+    <!-- 单选框插件 -->
+	<script src="{%static 'js/jquery.toast.min.js'%}"></script>
+	<link href="{%static 'css/jquery.toast.min.css'%}" rel="stylesheet" />
+    <!-- 弹出框插件 -->
+    <script src="{%static 'js/jquery-confirm.min.js'%}"></script>
+    <link href="{%static 'css/jquery-confirm.min.css'%}" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="{%static 'assets/css/common.css'%}">
+	<link rel="stylesheet" type="text/css" href="{%static 'assets/css/overview.css'%}">
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="blue" data-image="{%static 'assets/img/sidebar-5.jpg'%}">
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                    用户信息
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li class="active">
+                    <div>
+                    	<div style="margin:15px 15px;">
+                    		<div class="card card-user">
+                            <div class="image">
+                                <img src="{%static 'images/timg.jpg'%}" alt="...">
+                            </div>
+                            <div class="content" style="min-height: 200px;">
+                                <div class="author">
+                                     <a href="#">
+                                    <img class="avatar border-gray" src="{%static 'images/user.jpg'%}" alt="...">                   
+                                    </a>
+                                </div>
+                                <h4 class="title" style="text-align:center"><span class="label label-primary" style="padding: .2em .6em .07em">爬虫总数:</span>&nbsp;<span class="label label-default" style="padding: .2em .6em .07em" id="crawler_num">{{userinfo.crawler_num}}</span></h4>
+                                <br/>
+                                <h4 class="title" style="text-align:center"><span class="label label-primary" style="padding: .2em .6em .07em">正在运行:</span>&nbsp;<span class="label label-default" style="padding: .2em .6em .07em" id="crawler_num_now">{{doing}}</span></h4>
+                                <br/>
+                                 <h4 class="title" style="text-align:center"><span class="label label-primary" style="padding: .2em .6em .07em">完成总数:</span>&nbsp;<span class="label label-default" style="padding: .2em .6em .07em" id="crawler_num_finished" >{{did}}</span></h4>
+                                <br/>
+                            </div>
+                            <hr>
+                            <div class="text-center" style="padding:0px 30px 10px 30px;">
+                                 <button type="button" id="addspider" class="btn-block label-primary btn-fill" style="padding-top:5px;">新建爬虫</button>
+                                
+
+                            </div>
+                        </div>
+                    	</div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse">
+                        <span class="sr-only"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:void(0);"></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                            </a>
+                        </li>
+                    </ul>
+                   
+                    <ul class="nav navbar-nav navbar-right">
+                        
+                        <li>
+                           <a href="{% url 'overview' %}">
+                               {{userinfo.username}}
+                            </a>
+                        </li>
+                        <li>
+                           <a href="{% url 'logout' %}">
+                               注销
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+            	<div id="createSpider" class="row" style="display:none">
+            	<div class="col-md-12">
+                    <div class="card" style="padding:20px 20px 20px 20px">
+            			
+            		<p class="text-primary" font-size="20px">请选择创建爬虫的方式:</p>
+                	<button type="button" id="quickly" class="btn btn-info btn-fill btn-sm"> 快速创建</button>
+					<button type="button" id="toCode" class="btn btn-info btn-fill btn-sm"> 代码创建</button>
+				
+
+					</div>
+            	</div>
+            	</div>
+            	<div id="quicklyShow" class="row" style="display:none">
+            	<div class="col-md-12">
+            	<hr/>
+            		<h3>示例爬虫:</h3>
+            		<hr/>
+                    <div class="sidebar-none page-dashboard">
+						<ul class="ul-app">
+						{%for crawler in crawlerList%}
+						    <li>
+						    <div class="box-app box-app-crawler"  style="height: 150px;"><div>
+						            <div class="box-app-header" style="background-color: #e19e35;">
+						                
+
+						                <span class="app-info">
+						                    <a class="app-title" style="color:#fff">名称:{{crawler.crawler_name}}</a>
+						                                                                
+						                      
+						                    
+						                    <a class="icon-product-type" data-toggle="tooltip" data-original-title="爬虫" data-placement="left">
+						                        <img src="{%static 'assets/img/crawler.png'%}"> </a>
+
+						     	        </span>
+						            </div>
+						            <!-- center -->
+						            <div class="box-app-body" style="height: 10px;">
+						                <p><span class="c-b40"></span>
+						                    <span class="c-b60" style="font-size: 96%;"></span>
+						                </p>
+						            </div>
+
+						            <div class="box-app-footer">
+						                <ul style="padding-left: 40px;padding-right: 40px;">
+						                    <li style="width: 100%;"><a class="btn-block btn-primary" href="{% url 'deploy' %}?crawler={{crawler.spiderfile}}" style="background-color: #e19e35;text-align:center;">部署</a>
+						                    </li>
+						                    
+						                </ul>
+						            </div>
+						            
+						        </div>
+						    </div>
+						</li>
+						{%endfor%}
+						</ul>
+						</div>
+			
+				</div>
+            	</div>
+            	<div id="toCodeShow" class="row" style="display:none">
+            	<div class="col-md-12">
+                    <div class="card" style="padding:20px 20px 20px 20px">
+                    <p class="text-primary" font-size="20px">代码创建:</p>
+            		<form role="form" action="{% url 'createSpider'%}" method="post">
+					  <div class="form-group">
+					    <label for="name">名称</label>
+					    <input type="text" class="form-control" id="name" name="name" placeholder="名称">
+					  </div>
+					  <div class="form-group">
+					    <label for="name">备注</label>
+					    <input type="text" class="form-control" id="remark" name="remark" placeholder="备注">
+					  </div>
+					  <div class="form-group">
+					    <label for="name">域</label>
+					    <input type="text" class="form-control" id="domain"  name="domain" placeholder="domain"  spellcheck="false">
+					  </div>
+					  
+					  <button type="submit" class="btn btn-info">创建</button>
+					</form>
+					</div>
+				
+				</div>
+            	</div>
+            	<hr/>
+            	<h3>用户爬虫:</h3>
+            		<hr/>
+                <div class="row">
+  
+                <div class="sidebar-none page-dashboard"  style="padding:20px 20px 20px 20px">
+<ul class="ul-app">
+{%for crawler in crawler_info%}
+    <li spiderID="{{crawler.crawler_id}}">
+    <div class="box-app box-app-crawler"><div>
+            <div class="box-app-header">
+                <div class="group-setting">
+                    <a class="btn-remove" spiderID="{{crawler.crawler_id}}">
+                        <span class="fs fs-remove-strong"></span>
+                    </a>
+                </div>
+
+                <span class="app-info">
+                    <a class="app-title">名称:{{crawler.remark}}</a>
+                    <a class="icon-product-type" data-toggle="tooltip" data-original-title="爬虫" data-placement="left">
+                        <img src="{%static 'assets/img/crawler.png'%}"> </a>
+
+     	        </span>
+            </div>
+            <!-- center -->
+            <div class="box-app-body">
+                <p><span class="c-b40">创建时间: </span>
+                    <span class="c-b60" style="font-size: 96%;">{{crawler.date|date:"Y-m-d"}}</span>
+                </p>
+                
+                <p spider="{{crawler.crawler_name}}">
+                    <span class="c-b40"> 应用状态: </span>
+                    <span id="state{{crawler.crawler_id}}" class="text-info" name="state" workID="{{crawler.workid}}" >{{crawler.status|state}}</span>
+                </p>
+
+            </div>
+
+            <div class="box-app-footer">
+                <ul>
+                    <li><a class="btn btn-primary deploy" href="javascript:void(0);">部署</a>
+                    </li>
+                    <li>
+                    <a class="btn btn-primary-light" href="{% url 'spiderManager' %}?crawler={{crawler.crawler_id}}" target="_Blank">结果</a>
+                   </li>
+                </ul>
+            </div>
+            <div class="box-app-footer" style="margin-top:10px;">
+                <ul>
+                    <li><a crawlerID="{{crawler.crawler_id}}" class="begin btn btn-primary" href="javascript:void(0);">启动</a>
+                    </li>
+                    <li>
+                    <a class="stop btn btn-primary-light" href="javascript:void(0);" crawlerID="{{crawler.crawler_id}}">停止</a>
+                   </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</li>
+{%endfor%}
+</ul>
+</div>
+						
+            
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+function sleep(numberMillis) { 
+	var now = new Date(); 
+	var exitTime = now.getTime() + numberMillis; 
+	while (true) { 
+	now = new Date(); 
+	if (now.getTime() > exitTime) 
+		return; 
+	} 
+}
+function Socket() { //用websocket监控爬虫运行状态
+	
+        if ("WebSocket" in window){  
+            socket = new WebSocket("ws://" + window.location.host + "/channels/?session_key={{ request.session.session_key }}");
+            socket.onopen = function() {
+                socket.onmessage = function(e) {
+                	console.log(e.data);
+                	socket.send("hello world");
+                    json = eval(e.data);
+		            for(var i=0,l=json.length;i<l;i++){
+			            for(var key in json[i]){
+			            	console.log(key+":"+json[i][key]);
+		            		if (key=="finished") {
+		            			for(var j=0,l=json[i][key].length;j<l;j++){
+				            		console.log(json[i][key][j].id);
+			            			$("span[workID="+json[i][key][j].id+"]").text("完成");
+		            			}
+			            	}
+			            	if (key=="running") {
+		            			for(var j=0,l=json[i][key].length;j<l;j++){
+				            		console.log(json[i][key][j].spider);
+			            			$("p[spider="+json[i][key][j].spider+"] span").eq(1).text("运行中");
+		            			}
+			            	}
+			            	
+			            }
+					}
+                }
+                
+            }
+            if (socket.readyState == WebSocket.OPEN) socket.onopen();
+        }
+        else
+        {
+           // 浏览器不支持 WebSocket
+           alert("您的浏览器不支持 WebSocket!");
+        }
+     }
+setTimeout('Socket()',3000);
+//监控状态改变
+$(".box-app-body p span").bind('DOMNodeInserted', function(e) {  
+    num = $(".box-app-body p span[name='state']").length;
+    console.log("num"+num);
+    var doing=0;
+    var did=0;
+    for (var i = 0; i<num; i++) {
+    	state = $(".box-app-body p span[name='state']").eq(i).text();
+    	console.log("state"+state);
+    	if (state=="运行中") {
+    		doing++
+    	}
+    	if (state=="完成") {
+    		did++
+    	}
+    }
+
+    $("#crawler_num_now").text(doing);
+    $("#crawler_num_finished").text(did);
+
+
+}); 
+//启动爬虫
+$(".begin").click(function(){
+		crawlerID = $(this).attr("crawlerID");
+		console.log(crawlerID)
+		$.post("{% url 'begin' %}",{crawler:crawlerID},function(result){
+			workID=result;
+			if (workID=="false") {
+				$.toast({
+					heading: 'Error',
+				    text: '运行失败',
+				    showHideTransition: 'fade',
+				    icon: 'error'
+					
+				});
+			}else{
+				$.toast({
+					heading: 'Success',
+				    text: '运行成功',
+				    showHideTransition: 'slide',
+				    icon: 'success'
+				});
+				$("#state"+crawlerID).text("运行中");
+				$("#state"+crawlerID).attr("workID",workID);
+			}
+		});
+	
+	});
+//停止爬虫
+$(".stop").click(function(){
+	crawlerID = $(this).attr("crawlerID");
+	console.log(crawlerID)
+	$.post("{% url 'stop' %}",{crawler:crawlerID},function(result){
+		$.toast({
+			heading: 'Error',
+		    text: '爬虫已停止',
+		    showHideTransition: 'fade',
+		    icon: 'error'			
+		});
+        $("#state"+crawlerID).text("已停止");
+	});
+});
+//部署爬虫
+$(".deploy").click(function(){
+	$.get("{% url 'DeploySpider' %}",function(result){
+		$.toast({
+			heading: 'Success',
+		    text: '部署成功',
+		    showHideTransition: 'slide',
+		    icon: 'success'
+		});
+	});
+});
+//创建爬虫
+$("#addspider").click(function(){
+	$("#createSpider").slideToggle();
+});
+//快速创建
+$("#quickly").click(function(){
+	$("#toCodeShow").slideUp();
+	$("#quicklyShow").slideDown();
+});
+//代码创建
+$("#toCode").click(function(){
+	$("#quicklyShow").slideUp();
+	$("#toCodeShow").slideDown();
+});
+//删除爬虫
+$(".btn-remove").click(function(){
+    var spiderid = $(this).attr("spiderID");
+    $.confirm({
+        title: '确认',
+        content: '是否要删除爬虫',
+        buttons: {
+            是: function () {
+                $.post("{% url 'removeSpider' %}",{crawler:spiderid},function(result){
+                    if (result=="false") {
+                        $.toast({
+                            heading: 'Error',
+                            text: '删除失败',
+                            showHideTransition: 'fade',
+                            icon: 'error'
+                            
+                        });
+                    }else{
+                        $("li[spiderID="+spiderid+"]").remove();
+                        var num = $("#crawler_num").text()
+                        $("#crawler_num").text(parseInt(num)-1)
+                    }
+                });
+            },
+            否: function () {
+                
+            }
+        }
+    });
+    
+});
+</script>
+</body>
+
+    <!--   Core JS Files   -->
+	<script src="{%static 'assets/js/bootstrap.min.js'%}" type="text/javascript"></script>
+
+	<!--  Checkbox, Radio & Switch Plugins -->
+	<script src="{%static 'assets/js/bootstrap-checkbox-radio-switch.js'%}"></script>
+
+    
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script src="{%static 'assets/js/light-bootstrap-dashboard.js'%}"></script>
+
+
+
+</html>

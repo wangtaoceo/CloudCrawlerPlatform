@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+
+# Define your item pipelines here
+#
+# Don't forget to add your pipeline to the ITEM_PIPELINES setting
+# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+
+import json,os,sys
+from scrapy.exceptions import DropItem
+
+class ${ProjectName}Pipeline(object):
+	
+	def __init__(self):
+		pass
+
+	def open_spider(self,spider):
+		projectdir = os.path.abspath(os.path.join(sys.path[0], os.pardir,"userdir","${ProjectName}","${ProjectName}"))
+		self.file = open(projectdir+"\\"+spider.name, 'wb')
+		
+	def process_item(self, item, spider):
+		line = json.dumps(dict(item)) + "\n"
+		self.file.write(line)
+		return item
+
+	def close_spider(self,spider):
+		self.file.close()
